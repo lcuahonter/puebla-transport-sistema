@@ -20,8 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentTab, onTabChange }) =>
     { id: 'certificaciones', label: 'Certificaciones', icon: 'badge', section: 'Operativo' },
     { id: 'unidades', label: 'Unidades', icon: 'commute', section: 'Control' },
     { id: 'empresas', label: 'Empresas', icon: 'business', section: 'Control' },
-    { id: 'asignar', label: 'Asignar', icon: 'add_task' },
-    { id: 'ajustes', label: 'Configuración', icon: 'settings' },
+    { id: 'ajustes', label: 'Configuración', icon: 'settings', section: 'Sistema' },
   ];
 
   const groupedItems = navItems.reduce((acc, item) => {
@@ -153,6 +152,33 @@ const Layout: React.FC<LayoutProps> = ({ children, currentTab, onTabChange }) =>
                 <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Control</p>
               </div>
               {groupedItems.Control.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => onTabChange(item.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group ${
+                    currentTab === item.id 
+                      ? 'bg-puebla-gold text-white shadow-lg' 
+                      : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <MaterialIcon 
+                    name={item.icon} 
+                    className={currentTab === item.id ? 'text-white' : 'text-white/50 group-hover:text-white'} 
+                    fill={currentTab === item.id}
+                  />
+                  <span className="font-semibold text-xs">{item.label}</span>
+                </button>
+              ))}
+            </>
+          )}
+
+          {/* Sistema Section */}
+          {groupedItems.Sistema && (
+            <>
+              <div className="pt-4 pb-2 px-2">
+                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Sistema</p>
+              </div>
+              {groupedItems.Sistema.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => onTabChange(item.id)}

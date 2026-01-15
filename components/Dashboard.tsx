@@ -32,17 +32,55 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const stats = [
-    { label: "Unidades Totales", value: "1,240", change: "+2.4%", trending: "up", icon: "directions_bus", color: "text-blue-600 bg-blue-50" },
-    { label: "Operadores Activos", value: "956", change: "+1.2%", trending: "up", icon: "badge", color: "text-green-600 bg-green-50" },
-    { label: "En Mantenimiento", value: "42", change: "-5%", trending: "down", icon: "build", color: "text-puebla-maroon bg-red-50" },
-    { label: "Eficiencia de Flota", value: "94%", status: "Excelente", icon: "speed", color: "text-puebla-gold bg-yellow-50" },
+    { 
+      label: "Concesiones Activas", 
+      value: "1,240", 
+      sublabel: "Total registradas",
+      change: "+2.4%", 
+      trending: "up", 
+      icon: "description", 
+      color: "text-blue-600 bg-blue-50",
+      detail: "85 vehículos en alta este mes"
+    },
+    { 
+      label: "Revista Vehicular", 
+      value: "156", 
+      sublabel: "Inspecciones pendientes",
+      change: "12 hoy", 
+      trending: "neutral", 
+      icon: "build", 
+      color: "text-orange-600 bg-orange-50",
+      detail: "94% tasa de aprobación"
+    },
+    { 
+      label: "Permisos Vigentes", 
+      value: "2,847", 
+      sublabel: "Mercantiles activos",
+      change: "+156", 
+      trending: "up", 
+      icon: "receipt_long", 
+      color: "text-green-600 bg-green-50",
+      detail: "45 por vencer en 30 días"
+    },
+    { 
+      label: "Certificaciones", 
+      value: "956", 
+      sublabel: "Gafetes vigentes",
+      change: "18 duplicados", 
+      trending: "neutral", 
+      icon: "badge", 
+      color: "text-purple-600 bg-purple-50",
+      detail: "3 cursos activos"
+    },
   ];
 
   const liveStatus = [
-    { id: 1, name: "Juan Perez Jimenez", details: "Unidad #452 • Centro Histórico", status: "ACTIVO", time: "2m", color: "text-status-success bg-status-success/10", icon: "bus_alert" },
-    { id: 2, name: "Maria Garcia Lopez", details: "Unidad #109 • Vía Atlixcáyotl", status: "EN RUTA", time: "5m", color: "text-primary bg-primary/10", icon: "route" },
-    { id: 3, name: "Roberto Gomez Ortiz", details: "Unidad #883 • Taller Central (Estadio)", status: "TALLER", time: "12m", color: "text-puebla-maroon bg-puebla-maroon/10", icon: "build" },
-    { id: 4, name: "Lucia Fernandez Ruiz", details: "Unidad #221 • CAPU", status: "INACTIVO", time: "1h", color: "text-slate-500 bg-slate-100", icon: "person" },
+    { id: 1, name: "Propuesta: Terminal Norte", details: "Sitio • Pendiente de aprobación", status: "PROPUESTA", time: "2h", color: "text-orange-500 bg-orange-50", icon: "pending_actions" },
+    { id: 2, name: "Revista Vehicular", details: "Unidad #452 • Inspección completada", status: "APROBADA", time: "1h", color: "text-green-600 bg-green-50", icon: "check_circle" },
+    { id: 3, name: "Vehículo Retenido", details: "Unidad #221 • Documentación incompleta", status: "RETENIDO", time: "3h", color: "text-red-600 bg-red-50", icon: "block" },
+    { id: 4, name: "Permiso Publicidad", details: "Empresa XYZ • Autorización emitida", status: "APROBADO", time: "4h", color: "text-blue-600 bg-blue-50", icon: "campaign" },
+    { id: 5, name: "Gafete Duplicado", details: "Op. Juan Pérez • Duplicado emitido", status: "EMITIDO", time: "5h", color: "text-purple-600 bg-purple-50", icon: "content_copy" },
+    { id: 6, name: "Constancia Empresa", details: "Uber Puebla • Registro renovado", status: "RENOVADO", time: "6h", color: "text-green-600 bg-green-50", icon: "business" },
   ];
 
   const getStatusColor = (status: string) => {
@@ -60,18 +98,32 @@ const Dashboard: React.FC = () => {
       {/* Metrics Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, idx) => (
-          <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+          <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-4">
-              <div className={`size-12 rounded-xl flex items-center justify-center ${stat.color}`}>
+              <div className={`size-12 rounded-xl flex items-center justify-center ${stat.color} group-hover:scale-110 transition-transform`}>
                 <MaterialIcon name={stat.icon} />
               </div>
-              <div className={`flex items-center gap-1 text-xs font-bold ${stat.trending === 'up' ? 'text-status-success' : 'text-puebla-maroon'}`}>
-                {stat.change || stat.status}
-                <MaterialIcon name={stat.trending === 'up' ? 'trending_up' : 'trending_down'} className="text-sm" />
-              </div>
+              {stat.trending !== 'neutral' && (
+                <div className={`flex items-center gap-1 text-xs font-bold ${stat.trending === 'up' ? 'text-status-success' : 'text-puebla-maroon'}`}>
+                  {stat.change}
+                  <MaterialIcon name={stat.trending === 'up' ? 'trending_up' : 'trending_down'} className="text-sm" />
+                </div>
+              )}
+              {stat.trending === 'neutral' && (
+                <div className="flex items-center gap-1 text-xs font-bold text-slate-500">
+                  {stat.change}
+                </div>
+              )}
             </div>
             <p className="text-slate-500 text-sm font-medium">{stat.label}</p>
-            <p className="text-3xl font-bold text-slate-900 mt-1">{stat.value}</p>
+            <p className="text-3xl font-bold text-slate-900 mt-1 mb-2">{stat.value}</p>
+            <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+              <p className="text-xs text-slate-400 font-medium">{stat.sublabel}</p>
+              <MaterialIcon name="arrow_forward" className="text-slate-300 text-sm group-hover:text-primary group-hover:translate-x-1 transition-all" />
+            </div>
+            {stat.detail && (
+              <p className="text-xs text-slate-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">{stat.detail}</p>
+            )}
           </div>
         ))}
       </div>
@@ -254,17 +306,50 @@ const Dashboard: React.FC = () => {
           </section>
 
           <section className="grid grid-cols-2 gap-6">
-            <div className="bg-primary text-white p-6 rounded-2xl shadow-lg relative overflow-hidden group">
-              <MaterialIcon name="auto_graph" className="absolute -right-4 -bottom-4 text-9xl text-white/5 rotate-12" />
-              <h4 className="font-bold text-lg mb-2">Análisis de Flota</h4>
-              <p className="text-white/70 text-sm mb-4">El flujo de transporte en Puebla Centro muestra una mejora del 15% hoy.</p>
-              <button className="bg-puebla-gold text-white px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 transition-all">Explorar Datos</button>
+            <div className="bg-primary text-white p-6 rounded-2xl shadow-lg relative overflow-hidden group cursor-pointer hover:scale-[1.02] transition-transform">
+              <MaterialIcon name="route" className="absolute -right-4 -bottom-4 text-9xl text-white/5 rotate-12" />
+              <h4 className="font-bold text-lg mb-2">Rutas y Propuestas</h4>
+              <p className="text-white/70 text-sm mb-4">2 propuestas de terminales pendientes de aprobación.</p>
+              <button className="bg-puebla-gold text-white px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 transition-all">
+                Ver Propuestas
+              </button>
             </div>
-            <div className="bg-puebla-maroon text-white p-6 rounded-2xl shadow-lg relative overflow-hidden group">
-              <MaterialIcon name="security" className="absolute -right-4 -bottom-4 text-9xl text-white/5 -rotate-12" />
-              <h4 className="font-bold text-lg mb-2">Seguridad Vial</h4>
-              <p className="text-white/70 text-sm mb-4">Protocolos de monitoreo activos para la zona de Angelópolis.</p>
-              <button className="bg-white/20 text-white border border-white/30 px-4 py-2 rounded-xl text-xs font-bold hover:bg-white/30 transition-all">Protocolos</button>
+            <div className="bg-puebla-maroon text-white p-6 rounded-2xl shadow-lg relative overflow-hidden group cursor-pointer hover:scale-[1.02] transition-transform">
+              <MaterialIcon name="business" className="absolute -right-4 -bottom-4 text-9xl text-white/5 -rotate-12" />
+              <h4 className="font-bold text-lg mb-2">Empresas Activas</h4>
+              <p className="text-white/70 text-sm mb-4">3 empresas de redes de transporte registradas.</p>
+              <button className="bg-white/20 text-white border border-white/30 px-4 py-2 rounded-xl text-xs font-bold hover:bg-white/30 transition-all">
+                Ver Constancias
+              </button>
+            </div>
+          </section>
+
+          {/* Alertas y notificaciones importantes */}
+          <section className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl border border-orange-200 p-6">
+            <div className="flex items-start gap-4">
+              <div className="size-12 rounded-xl bg-orange-500 text-white flex items-center justify-center shrink-0">
+                <MaterialIcon name="warning" className="text-2xl" />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-bold text-slate-800 mb-2">Tareas Pendientes</h4>
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-2 text-sm text-slate-600">
+                    <MaterialIcon name="circle" className="text-[8px] text-orange-500" />
+                    <span><strong>45 permisos</strong> vencerán en los próximos 30 días</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm text-slate-600">
+                    <MaterialIcon name="circle" className="text-[8px] text-orange-500" />
+                    <span><strong>156 inspecciones</strong> programadas para esta semana</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm text-slate-600">
+                    <MaterialIcon name="circle" className="text-[8px] text-orange-500" />
+                    <span><strong>1 vehículo retenido</strong> requiere liberación</span>
+                  </li>
+                </ul>
+              </div>
+              <button className="px-4 py-2 bg-white text-orange-600 rounded-xl text-xs font-bold hover:shadow-md transition-all border border-orange-200">
+                Ver Todas
+              </button>
             </div>
           </section>
         </div>
@@ -272,16 +357,16 @@ const Dashboard: React.FC = () => {
         <div className="space-y-6">
           <section className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-              <h3 className="font-bold text-slate-800">Movimientos Recientes</h3>
+              <h3 className="font-bold text-slate-800">Actividad Reciente</h3>
               <span className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-blue-50 text-primary text-[10px] font-bold uppercase tracking-wider">
-                <MaterialIcon name="sync" className="text-[10px] animate-spin" /> Live Sync
+                <MaterialIcon name="sync" className="text-[10px] animate-spin" /> Live
               </span>
             </div>
-            <div className="p-4 space-y-4 overflow-y-auto max-h-[600px] hide-scrollbar">
+            <div className="p-4 space-y-3 overflow-y-auto max-h-[600px] hide-scrollbar flex-1">
               {liveStatus.map((item) => (
-                <div key={item.id} className="flex items-center gap-4 p-4 rounded-xl border border-slate-50 bg-slate-50/50 hover:bg-slate-50 transition-colors cursor-pointer group">
-                  <div className="size-10 rounded-lg bg-white shadow-sm flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
-                    <MaterialIcon name={item.icon} className="text-xl" />
+                <div key={item.id} className="flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition-colors cursor-pointer group">
+                  <div className={`size-10 rounded-lg shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform ${item.color}`}>
+                    <MaterialIcon name={item.icon} className="text-lg" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-slate-800 truncate">{item.name}</p>
@@ -295,8 +380,10 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               ))}
-              <button className="w-full py-3 text-xs font-bold text-slate-400 hover:text-primary transition-colors border-t border-dashed border-slate-100 mt-2">
-                Cargar más actividad
+            </div>
+            <div className="p-4 border-t border-slate-100">
+              <button className="w-full py-3 text-xs font-bold text-slate-400 hover:text-primary transition-colors hover:bg-slate-50 rounded-lg">
+                Ver toda la actividad →
               </button>
             </div>
           </section>
