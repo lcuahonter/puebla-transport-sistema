@@ -10,13 +10,26 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, currentTab, onTabChange }) => {
-  const navItems: { id: TabType; label: string; icon: string }[] = [
+  const navItems: { id: TabType; label: string; icon: string; section?: string }[] = [
     { id: 'inicio', label: 'Dashboard', icon: 'dashboard' },
-    { id: 'personal', label: 'Operadores', icon: 'group' },
-    { id: 'unidades', label: 'Unidades', icon: 'commute' },
-    { id: 'asignar', label: 'Nueva Asignación', icon: 'add_task' },
+    { id: 'concesiones', label: 'Concesiones', icon: 'description', section: 'Administrativo' },
+    { id: 'permisos', label: 'Permisos', icon: 'receipt_long', section: 'Administrativo' },
+    { id: 'revista', label: 'Revista Vehicular', icon: 'build', section: 'Técnico' },
+    { id: 'rutas', label: 'Rutas', icon: 'route', section: 'Técnico' },
+    { id: 'personal', label: 'Operadores', icon: 'group', section: 'Operativo' },
+    { id: 'certificaciones', label: 'Certificaciones', icon: 'badge', section: 'Operativo' },
+    { id: 'unidades', label: 'Unidades', icon: 'commute', section: 'Control' },
+    { id: 'empresas', label: 'Empresas', icon: 'business', section: 'Control' },
+    { id: 'asignar', label: 'Asignar', icon: 'add_task' },
     { id: 'ajustes', label: 'Configuración', icon: 'settings' },
   ];
+
+  const groupedItems = navItems.reduce((acc, item) => {
+    const section = item.section || 'main';
+    if (!acc[section]) acc[section] = [];
+    acc[section].push(item);
+    return acc;
+  }, {} as Record<string, typeof navItems>);
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-display">
@@ -32,8 +45,8 @@ const Layout: React.FC<LayoutProps> = ({ children, currentTab, onTabChange }) =>
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
-          {navItems.map((item) => (
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {groupedItems.main?.map((item) => (
             <button
               key={item.id}
               onClick={() => onTabChange(item.id)}
@@ -51,6 +64,114 @@ const Layout: React.FC<LayoutProps> = ({ children, currentTab, onTabChange }) =>
               <span className="font-semibold text-sm">{item.label}</span>
             </button>
           ))}
+
+          {/* Administrativo Section */}
+          {groupedItems.Administrativo && (
+            <>
+              <div className="pt-4 pb-2 px-2">
+                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Administrativo</p>
+              </div>
+              {groupedItems.Administrativo.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => onTabChange(item.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group ${
+                    currentTab === item.id 
+                      ? 'bg-puebla-gold text-white shadow-lg' 
+                      : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <MaterialIcon 
+                    name={item.icon} 
+                    className={currentTab === item.id ? 'text-white' : 'text-white/50 group-hover:text-white'} 
+                    fill={currentTab === item.id}
+                  />
+                  <span className="font-semibold text-xs">{item.label}</span>
+                </button>
+              ))}
+            </>
+          )}
+
+          {/* Técnico Section */}
+          {groupedItems.Técnico && (
+            <>
+              <div className="pt-4 pb-2 px-2">
+                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Técnico</p>
+              </div>
+              {groupedItems.Técnico.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => onTabChange(item.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group ${
+                    currentTab === item.id 
+                      ? 'bg-puebla-gold text-white shadow-lg' 
+                      : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <MaterialIcon 
+                    name={item.icon} 
+                    className={currentTab === item.id ? 'text-white' : 'text-white/50 group-hover:text-white'} 
+                    fill={currentTab === item.id}
+                  />
+                  <span className="font-semibold text-xs">{item.label}</span>
+                </button>
+              ))}
+            </>
+          )}
+
+          {/* Operativo Section */}
+          {groupedItems.Operativo && (
+            <>
+              <div className="pt-4 pb-2 px-2">
+                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Operativo</p>
+              </div>
+              {groupedItems.Operativo.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => onTabChange(item.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group ${
+                    currentTab === item.id 
+                      ? 'bg-puebla-gold text-white shadow-lg' 
+                      : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <MaterialIcon 
+                    name={item.icon} 
+                    className={currentTab === item.id ? 'text-white' : 'text-white/50 group-hover:text-white'} 
+                    fill={currentTab === item.id}
+                  />
+                  <span className="font-semibold text-xs">{item.label}</span>
+                </button>
+              ))}
+            </>
+          )}
+
+          {/* Control Section */}
+          {groupedItems.Control && (
+            <>
+              <div className="pt-4 pb-2 px-2">
+                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Control</p>
+              </div>
+              {groupedItems.Control.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => onTabChange(item.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group ${
+                    currentTab === item.id 
+                      ? 'bg-puebla-gold text-white shadow-lg' 
+                      : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <MaterialIcon 
+                    name={item.icon} 
+                    className={currentTab === item.id ? 'text-white' : 'text-white/50 group-hover:text-white'} 
+                    fill={currentTab === item.id}
+                  />
+                  <span className="font-semibold text-xs">{item.label}</span>
+                </button>
+              ))}
+            </>
+          )}
         </nav>
 
         <div className="p-4 border-t border-white/10">
